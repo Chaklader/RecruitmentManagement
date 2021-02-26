@@ -15,9 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class Employee {
 
-
     // (name, contract information, age, you can decide.)
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -20,5 +20,5 @@ public class EmployeeDto {
 
     private String email;
 
-    private String state;
+//    private String state;
 }

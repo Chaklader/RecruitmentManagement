@@ -104,12 +104,12 @@ public class EmployeeService {
 
         Employee emplo = machineEntry.getKey();
 
-        if(emplo.getState()==EmployeeStates.IN_CHECK){
+        if (emplo.getState() == EmployeeStates.IN_CHECK) {
 
             return emplo;
         }
 
-        log.info("state = "+ emplo.getState());
+        log.info("state = " + emplo.getState());
 
         StateMachine<EmployeeStates, EmployeeEvents> sm = machineEntry.getValue();
 
@@ -119,7 +119,7 @@ public class EmployeeService {
 
 //        Employee emplo = machineEntry.getKey();
 
-        log.info("state = "+ emplo.getState());
+        log.info("state = " + emplo.getState());
 
         return emplo;
     }
