@@ -16,6 +16,9 @@ import java.util.Date;
 public class Employee {
 
 
+    // (name, contract information, age, you can decide.)
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

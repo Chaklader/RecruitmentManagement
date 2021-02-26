@@ -5,15 +5,9 @@ import com.recruitment.manager.entity.EmployeeDto;
 import com.recruitment.manager.enums.EmployeeEvents;
 import com.recruitment.manager.enums.EmployeeStates;
 import com.recruitment.manager.repo.EmployeeRepository;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
@@ -24,13 +18,14 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
+import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Chaklader on Feb, 2021
  */
-//@Slf4j
+@Slf4j
 @Service
 public class EmployeeService {
 
@@ -53,123 +48,108 @@ public class EmployeeService {
         this.factory = machineFactory;
     }
 
-
-    public Employee create(EmployeeDto employeeDto){
-
-        Employee newPlan = modelMapper.map(employeeDto, Employee.class);
-
-        newPlan.setState(EmployeeStates.ADDED);
-        newPlan.setCreationOn(new Date());
-
-        Employee save = employeeRepository.save(newPlan);
-
-        return save;
-    }
-
-    public Optional<Employee> findById(Long id){
-
-        Optional<Employee> user = employeeRepository.findById(id);
-        return user;
-    }
-
-    public List<Employee> findAll(){
-
-        return (List<Employee>) employeeRepository.findAll();
-    }
-
-
-
-
-
-
-//    @Override
-//    public Plan createPlan(PlanDto planDto) {
-//        try {
-//            Plan newPlan = modelMapper.map(planDto, Plan.class);
-//            if (newPlan != null) {
-//                if (newPlan.getId()==null || StringUtils.isBlank(newPlan.getId().toString())) {
-//                    newPlan.setId(AppUtils.getGeneratedUUID());
-//                }
-//                newPlan.setProducts(productHelper.getProductsByIds(planDto.getProductIds()));
-//                newPlan.setRates(rateHelper.getRatsByIds(planDto.getRateIds()));
-//
-//                Plan plan = planRepository.save(newPlan);
-//                return plan;
-//            }
-//        } catch (Exception ex) {
-//            log.error("Error occurred while create new Plan ::" + ex.getMessage());
-//        }
-//        return null;
-//    }
-
-
     public Employee createEmployee(EmployeeDto employeeDto) {
 
         try {
 
             Employee newEmployee = modelMapper.map(employeeDto, Employee.class);
-            newEmployee.setState(EmployeeStates.ADDED);
 
-            return this.employeeRepository.save(newEmployee);
+            if (newEmployee != null) {
 
+                newEmployee.setState(EmployeeStates.ADDED);
+                newEmployee.setCreationOn(new Date());
+
+                return this.employeeRepository.save(newEmployee);
+
+            }
         } catch (Exception ex) {
-            //log.error("Error occurred while create new Plan ::" + ex.getMessage());
-
+            log.error("Error occurred while create new Plan ::" + ex.getMessage());
         }
 
         return null;
     }
 
-    public Employee createEmployee(String firstName, String lastName, String email) {
+//    public Employee createEmployee(String firstName, String lastName, String email) {
+//
+//        Employee em = new Employee(firstName, lastName, email);
+//        Employee employee = this.employeeRepository.save(em);
+//
+//        return employee;
+//    }
 
-        Employee em = new Employee(firstName, lastName, email);
-        Employee employee = this.employeeRepository.save(em);
+    public Optional<Employee> findById(Long id) {
 
-        return employee;
+        Optional<Employee> user = employeeRepository.findById(id);
+        return user;
     }
 
-    public Employee findEmployeeById(Long id) {
+    public List<Employee> findAll() {
 
-        Employee employee = employeeRepository.findById(id).orElse(null);
-
-        return employee;
+        return (List<Employee>) employeeRepository.findAll();
     }
 
-    public StateMachine<EmployeeStates, EmployeeEvents> check(Long orderId, String paymentConfirmationNumber) {
+//    public Employee findEmployeeById(Long id) {
+//
+//        Employee employee = employeeRepository.findById(id).orElse(null);
+//
+//        return employee;
+//    }
 
-        StateMachine<EmployeeStates, EmployeeEvents> sm = this.build(orderId);
+    public Employee check(Long employeeId, String paymentConfirmationNumber) {
 
-        Message<EmployeeEvents> checkMessage = MessageBuilder.withPayload(EmployeeEvents.CHECK).setHeader(EMPLOYEE_ID_HEADER, orderId).setHeader("paymentConfirmationNumber", paymentConfirmationNumber).build();
+        Map<Employee, StateMachine<EmployeeStates, EmployeeEvents>> stateMachineMap = this.build(employeeId);
+
+        Map.Entry<Employee, StateMachine<EmployeeStates, EmployeeEvents>> machineEntry = stateMachineMap.entrySet().iterator().next();
+
+
+        Employee emplo = machineEntry.getKey();
+
+        if(emplo.getState()==EmployeeStates.IN_CHECK){
+
+            return emplo;
+        }
+
+        log.info("state = "+ emplo.getState());
+
+        StateMachine<EmployeeStates, EmployeeEvents> sm = machineEntry.getValue();
+
+
+        Message<EmployeeEvents> checkMessage = MessageBuilder.withPayload(EmployeeEvents.CHECK).setHeader(EMPLOYEE_ID_HEADER, employeeId).setHeader("paymentConfirmationNumber", paymentConfirmationNumber).build();
         sm.sendEvent(checkMessage);
 
-        return sm;
+//        Employee emplo = machineEntry.getKey();
+
+        log.info("state = "+ emplo.getState());
+
+        return emplo;
     }
 
-    public StateMachine<EmployeeStates, EmployeeEvents> approve(Long orderId) {
+//    public StateMachine<EmployeeStates, EmployeeEvents> approve(Long orderId) {
+//
+//        StateMachine<EmployeeStates, EmployeeEvents> sm = this.build(orderId);
+//        Message<EmployeeEvents> fulFilmentMessage = MessageBuilder.withPayload(EmployeeEvents.APPROVE).setHeader(EMPLOYEE_ID_HEADER, orderId).build();
+//
+//        sm.sendEvent(fulFilmentMessage);
+//
+//        return sm;
+//    }
 
-        StateMachine<EmployeeStates, EmployeeEvents> sm = this.build(orderId);
-        Message<EmployeeEvents> fulFilmentMessage = MessageBuilder.withPayload(EmployeeEvents.APPROVE).setHeader(EMPLOYEE_ID_HEADER, orderId).build();
-
-        sm.sendEvent(fulFilmentMessage);
-
-        return sm;
-    }
-
-    public StateMachine<EmployeeStates, EmployeeEvents> active(Long employeeId) {
-
-        StateMachine<EmployeeStates, EmployeeEvents> sm = this.build(employeeId);
-        Message<EmployeeEvents> activeMessage = MessageBuilder.withPayload(EmployeeEvents.ACTIVE).setHeader(EMPLOYEE_ID_HEADER, employeeId).build();
-
-        sm.sendEvent(activeMessage);
-
-        return sm;
-    }
+//    public StateMachine<EmployeeStates, EmployeeEvents> active(Long employeeId) {
+//
+//        StateMachine<EmployeeStates, EmployeeEvents> sm = this.build(employeeId);
+//        Message<EmployeeEvents> activeMessage = MessageBuilder.withPayload(EmployeeEvents.ACTIVE).setHeader(EMPLOYEE_ID_HEADER, employeeId).build();
+//
+//        sm.sendEvent(activeMessage);
+//
+//        return sm;
+//    }
 
     /**
      * @param orderId
      * @return
      */
-    private StateMachine<EmployeeStates, EmployeeEvents> build(Long orderId) {
+//    private StateMachine<EmployeeStates, EmployeeEvents> build(Long orderId) {
+    private Map<Employee, StateMachine<EmployeeStates, EmployeeEvents>> build(Long orderId) {
 
         Employee employee = this.employeeRepository.findById(orderId).orElse(null);
         String employeeIdKey = Long.toString(Objects.requireNonNull(employee).getId());
@@ -222,6 +202,9 @@ public class EmployeeService {
 
         stateMachine.start();
 
-        return stateMachine;
+        Map<Employee, StateMachine<EmployeeStates, EmployeeEvents>> stateMachineMap = new LinkedHashMap<>();
+        stateMachineMap.putIfAbsent(employee, stateMachine);
+
+        return stateMachineMap;
     }
 }

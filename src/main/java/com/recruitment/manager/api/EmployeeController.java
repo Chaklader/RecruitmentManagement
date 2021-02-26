@@ -3,11 +3,11 @@ package com.recruitment.manager.api;
 import com.recruitment.manager.entity.Employee;
 import com.recruitment.manager.entity.EmployeeDto;
 import com.recruitment.manager.service.EmployeeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,11 +32,21 @@ public class EmployeeController {
 
 
     @PostMapping
-    public ResponseEntity<Object> saveUser(@RequestBody EmployeeDto user) {
+    public ResponseEntity<Object> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
 
-        Employee employee = employeeService.create(user);
+        Employee employee = employeeService.createEmployee(employeeDto);
 
         return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.CREATED);
+    }
+
+
+    @PutMapping(value = "check/{id}")
+    public ResponseEntity<Object> changeStateInCheck(@PathVariable(value = "id") long id) {
+
+        Employee employee = employeeService.check(id, "");
+
+        return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.OK);
+
     }
 
     @GetMapping
