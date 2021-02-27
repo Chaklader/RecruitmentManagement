@@ -1,9 +1,11 @@
 package com.recruitment.manager.service;
 
+import com.recruitment.manager.dto.EmployeeDto;
+import com.recruitment.manager.entity.Address;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.entity.EmployeeDto;
 import com.recruitment.manager.enums.EmployeeEvents;
 import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.repo.AddressRepository;
 import com.recruitment.manager.repo.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -41,18 +43,23 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Autowired
+    private final AddressRepository addressRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private final StateMachineFactory<EmployeeStates, EmployeeEvents> factory;
 
 
-    public EmployeeService(EmployeeRepository employeeRepository, StateMachineFactory<EmployeeStates, EmployeeEvents> machineFactory) {
+    public EmployeeService(EmployeeRepository employeeRepository, AddressRepository addressRepository, StateMachineFactory<EmployeeStates, EmployeeEvents> machineFactory) {
 
         this.employeeRepository = employeeRepository;
+        this.addressRepository = addressRepository;
 
         this.factory = machineFactory;
     }
+
 
     /**
      * this method will create a new employee with ADDED state and the current date
@@ -63,6 +70,16 @@ public class EmployeeService {
     public Employee createEmployee(EmployeeDto employeeDto) {
 
         try {
+
+            Address address = modelMapper.map(employeeDto.getAddressDto(), Address.class);
+
+            if (address == null) {
+
+                log.info("we are unable to acquire the address info for the employee.");
+            }
+
+            addressRepository.save(address);
+
             Employee newEmployee = modelMapper.map(employeeDto, Employee.class);
 
             if (newEmployee != null) {
@@ -113,16 +130,16 @@ public class EmployeeService {
 
     public Optional<Employee> findById(Long id) {
 
-        Optional<Employee> user = employeeRepository.findById(id);
+        Optional<Employee> employee = employeeRepository.findById(id);
 
-        return user;
+        return employee;
     }
 
     public List<Employee> findAll() {
 
-        List<Employee> all = (List<Employee>) employeeRepository.findAll();
+        List<Employee> employees = (List<Employee>) employeeRepository.findAll();
 
-        return all;
+        return employees;
     }
 
     private Pair<Employee, StateMachine<EmployeeStates, EmployeeEvents>> build(Long employeeId) {

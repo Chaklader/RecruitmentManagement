@@ -3,15 +3,17 @@ package com.recruitment.manager.config;
 
 import com.recruitment.manager.enums.EmployeeEvents;
 import com.recruitment.manager.enums.EmployeeStates;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
+import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.listener.StateMachineListenerAdapter;
+import org.springframework.statemachine.state.State;
 
 import static com.recruitment.manager.Parameters.EMPLOYEE_ID_HEADER;
 
@@ -19,9 +21,9 @@ import static com.recruitment.manager.Parameters.EMPLOYEE_ID_HEADER;
 /**
  * Created by Chaklader on Feb, 2021
  */
-@EnableStateMachineFactory
-@Configuration
 @Slf4j
+@Configuration
+@EnableStateMachineFactory
 public class EmployeeStateMachineConfig extends StateMachineConfigurerAdapter<EmployeeStates, EmployeeEvents> {
 
 
@@ -71,6 +73,21 @@ public class EmployeeStateMachineConfig extends StateMachineConfigurerAdapter<Em
             .state(EmployeeStates.APPROVED)
 
             .end(EmployeeStates.ACTIVE);
+    }
+
+    @Override
+    public void configure(StateMachineConfigurationConfigurer<EmployeeStates, EmployeeEvents> config) throws Exception {
+
+        StateMachineListenerAdapter<EmployeeStates, EmployeeEvents> adapter = new StateMachineListenerAdapter<>() {
+
+            @Override
+            public void stateChanged(State<EmployeeStates, EmployeeEvents> from, State<EmployeeStates, EmployeeEvents> to) {
+
+                log.info(String.format("state changed  from:  %s  to:  %s", from, to));
+            }
+        };
+
+        config.withConfiguration().autoStartup(false).listener(adapter);
     }
 
     @Bean

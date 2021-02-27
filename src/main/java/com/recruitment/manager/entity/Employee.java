@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+
+
+
 @Entity(name = "Employee")
 @Table(name = "employee")
 @Data
@@ -15,11 +18,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class Employee {
 
-    // (name, contract information, age, you can decide.)
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "created_on")
+    private Date creationOn;
 
     @Column(name = "first_name")
     private String firstName;
@@ -30,21 +35,20 @@ public class Employee {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "created_on")
-    private Date creationOn;
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
+
+    @Column(name = "age")
+    private Integer age;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private EmployeeStates employeeState;
 
 
-    public Employee(String firstName, String lastName, String email) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.creationOn = new Date();
-        this.email = email;
 
-        this.employeeState = EmployeeStates.ADDED;
-    }
 }

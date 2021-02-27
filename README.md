@@ -38,6 +38,8 @@ Please provide a solution with the  above features with the following considerat
 
 
 
+springdoc.swagger-ui.path=/pf-swagger-ui.html
+
 
 
 

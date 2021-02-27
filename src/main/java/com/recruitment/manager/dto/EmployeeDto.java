@@ -1,6 +1,8 @@
-package com.recruitment.manager.entity;
+package com.recruitment.manager.dto;
 
 import lombok.Data;
+
+import javax.persistence.Column;
 
 /**
  * Created by Chaklader on Feb, 2021
@@ -13,5 +15,11 @@ public class EmployeeDto {
     private String lastName;
 
     private String email;
+
+    private String phoneNumber;
+
+    private Integer age;
+
+    private AddressDto addressDto;
 
 }
