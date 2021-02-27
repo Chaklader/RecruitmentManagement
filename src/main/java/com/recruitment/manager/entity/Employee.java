@@ -35,7 +35,7 @@ public class Employee {
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private EmployeeStates state;
+    private EmployeeStates employeeState;
 
 
     public Employee(String firstName, String lastName, String email) {
@@ -45,6 +45,6 @@ public class Employee {
         this.creationOn = new Date();
         this.email = email;
 
-        this.state = EmployeeStates.ADDED;
+        this.employeeState = EmployeeStates.ADDED;
     }
 }

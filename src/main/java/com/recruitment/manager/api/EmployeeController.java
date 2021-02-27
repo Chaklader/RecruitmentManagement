@@ -10,11 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+
+
+
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/employee")
 public class EmployeeController {
 
 
@@ -31,7 +32,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public ResponseEntity<Object> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
 
         Employee employee = employeeService.createEmployee(employeeDto);
@@ -40,32 +41,13 @@ public class EmployeeController {
     }
 
 
-    @PutMapping(value = "check/{id}")
+    @PutMapping(value = "incheck/{id}")
     public ResponseEntity<Object> changeStateInCheck(@PathVariable(value = "id") long id) {
 
-        Employee employee = employeeService.check(id, "");
+        Employee employee = employeeService.changeToInCheckState(id, "");
 
         return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.OK);
 
     }
-
-    @GetMapping
-    public ResponseEntity<List<Employee>> findAllUsers() {
-
-        List<Employee> all = employeeService.findAll();
-
-        return new ResponseEntity<>(all, new HttpHeaders(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Employee> findUserById(@PathVariable(value = "id") long id) {
-
-        Optional<Employee> user = employeeService.findById(id);
-
-        ResponseEntity<Employee> entity = user.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
-
-        return entity;
-    }
-
 
 }
