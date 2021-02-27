@@ -3,8 +3,8 @@ package com.recruitment.manager.service;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Address;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.enums.EmployeeEvents;
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.statesandevents.EmployeeEvents;
+import com.recruitment.manager.statesandevents.EmployeeStates;
 import com.recruitment.manager.repo.AddressRepository;
 import com.recruitment.manager.repo.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.recruitment.manager.MessageConstant.EMPLOYEE_ID_HEADER;
+import static com.recruitment.manager.util.MessageConstant.EMPLOYEE_ID_HEADER;
 
 
 /**

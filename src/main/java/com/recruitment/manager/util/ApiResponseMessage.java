@@ -1,4 +1,4 @@
-package com.recruitment.manager.api;
+package com.recruitment.manager.util;
 
 import org.springframework.http.HttpStatus;
 
@@ -21,6 +21,7 @@ public class ApiResponseMessage {
 
 
     public static Map<String, Object> getGenericApiResponse(Boolean isSuccessful, HttpStatus httpStatusCode, String message) {
+
         apiResponse = new LinkedHashMap<>();
 
         apiResponse.put(TAG_IS_SUCCESSFUL, isSuccessful);

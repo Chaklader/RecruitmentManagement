@@ -1,10 +1,10 @@
 package com.recruitment.manager.api;
 
-import com.recruitment.manager.MessageConstant;
-import com.recruitment.manager.entity.Employee;
 import com.recruitment.manager.dto.EmployeeDto;
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.entity.Employee;
 import com.recruitment.manager.service.EmployeeService;
+import com.recruitment.manager.util.ApiResponseMessage;
+import com.recruitment.manager.util.MessageConstant;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 
 
 @Slf4j
@@ -38,16 +37,13 @@ public class EmployeeController {
         defined above in the state machine
     * */
 
-    // TODO
+    // TODO 1: can't parse JSON.  Raw result:
+    // TODO 2: dont get any validation messgae
     /*
-      1. Improve the models and add the model validations with the email regex etc
-      2. Add the global exceptions
-      3. Improve the API code and write them properly
-
       4. Add docker: Being simply executable with the least effort Ideally using
          Docker and docker-compose or any similar approach.
       5. Write the IT tests using the rest assured
-      6. Write the commend for the building the state machine
+      6. Write the comments
       7. Write the README file for the app
     * */
 
@@ -58,26 +54,24 @@ public class EmployeeController {
     @Operation(summary = "create an employee in the recruiting platform")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Create employee using the dto", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeStates.class))}),
+            @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))}),
         @ApiResponse(responseCode = "422", description = MessageConstant.EMPLOYEE_NOT_CREATE_MSG, content = @Content),
         @ApiResponse(responseCode = "500", description = MessageConstant.INTERNAL_SERVER_ERROR_MSG, content = @Content)})
 
     @PostMapping(value = "/create")
     public ResponseEntity<Object> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
 
-        try{
+        try {
             Employee employee = employeeService.createEmployee(employeeDto);
 
-            if(employee != null){
+            if (employee != null) {
 
                 return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.CREATED);
             }
 
             return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY,
                 MessageConstant.EMPLOYEE_NOT_CREATE_MSG), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
             log.error(MessageConstant.INTERNAL_SERVER_ERROR_MSG + ex.getMessage());
             return new ResponseEntity<>(ApiResponseMessage.getInternalServerError(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,7 +80,6 @@ public class EmployeeController {
 
 
     @Operation(description = "employee onboarding progress: change state from ADDED to IN_CHECK")
-
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "change employee state to the IN_CHECK using employee Id", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))}),
@@ -95,18 +88,17 @@ public class EmployeeController {
     @PutMapping(value = "incheck/{id}")
     public ResponseEntity<Object> changeStateInCheck(@PathVariable(value = "id") long id) {
 
-        try{
+        try {
             Employee employee = employeeService.changeToInCheckState(id, "changing the employee state to the IN_CHECK");
 
-            if(employee !=null){
+            if (employee != null) {
 
                 return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.OK);
             }
 
             return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY,
                 MessageConstant.EMPLOYEE_STATE_NOT_UPDATED_MSG), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
             log.error(MessageConstant.INTERNAL_SERVER_ERROR_MSG + ex.getMessage());
             return new ResponseEntity<>(ApiResponseMessage.getInternalServerError(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);

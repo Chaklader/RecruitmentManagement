@@ -1,11 +1,9 @@
 package com.recruitment.manager.config;
 
 
-import com.recruitment.manager.enums.EmployeeEvents;
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.statesandevents.EmployeeEvents;
+import com.recruitment.manager.statesandevents.EmployeeStates;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -15,7 +13,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-import static com.recruitment.manager.MessageConstant.EMPLOYEE_ID_HEADER;
+import static com.recruitment.manager.util.MessageConstant.EMPLOYEE_ID_HEADER;
 
 
 /**
@@ -90,12 +88,4 @@ public class EmployeeStateMachineConfig extends StateMachineConfigurerAdapter<Em
         config.withConfiguration().autoStartup(false).listener(adapter);
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
-
-        return modelMapper;
-    }
 }
