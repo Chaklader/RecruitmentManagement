@@ -15,7 +15,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-import static com.recruitment.manager.Parameters.EMPLOYEE_ID_HEADER;
+import static com.recruitment.manager.MessageConstant.EMPLOYEE_ID_HEADER;
 
 
 /**

@@ -1,8 +1,16 @@
 package com.recruitment.manager.api;
 
+import com.recruitment.manager.MessageConstant;
 import com.recruitment.manager.entity.Employee;
 import com.recruitment.manager.dto.EmployeeDto;
+import com.recruitment.manager.enums.EmployeeStates;
 import com.recruitment.manager.service.EmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,7 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
+
+
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/employee")
 public class EmployeeController {
@@ -42,22 +55,62 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
+    @Operation(summary = "create an employee in the recruiting platform")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Create employee using the dto", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeStates.class))}),
+        @ApiResponse(responseCode = "422", description = MessageConstant.EMPLOYEE_NOT_CREATE_MSG, content = @Content),
+        @ApiResponse(responseCode = "500", description = MessageConstant.INTERNAL_SERVER_ERROR_MSG, content = @Content)})
+
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<Object> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
 
-        Employee employee = employeeService.createEmployee(employeeDto);
+        try{
+            Employee employee = employeeService.createEmployee(employeeDto);
 
-        return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.CREATED);
+            if(employee != null){
+
+                return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.CREATED);
+            }
+
+            return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY,
+                MessageConstant.EMPLOYEE_NOT_CREATE_MSG), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        catch (Exception ex) {
+
+            log.error(MessageConstant.INTERNAL_SERVER_ERROR_MSG + ex.getMessage());
+            return new ResponseEntity<>(ApiResponseMessage.getInternalServerError(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
+    @Operation(description = "employee onboarding progress: change state from ADDED to IN_CHECK")
+
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "change employee state to the IN_CHECK using employee Id", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))}),
+        @ApiResponse(responseCode = "422", description = MessageConstant.EMPLOYEE_STATE_NOT_UPDATED_MSG, content = @Content),
+        @ApiResponse(responseCode = "500", description = MessageConstant.INTERNAL_SERVER_ERROR_MSG, content = @Content)})
     @PutMapping(value = "incheck/{id}")
     public ResponseEntity<Object> changeStateInCheck(@PathVariable(value = "id") long id) {
 
-        Employee employee = employeeService.changeToInCheckState(id, "");
+        try{
+            Employee employee = employeeService.changeToInCheckState(id, "changing the employee state to the IN_CHECK");
 
-        return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.OK);
+            if(employee !=null){
 
+                return new ResponseEntity<>(employee, new HttpHeaders(), HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY,
+                MessageConstant.EMPLOYEE_STATE_NOT_UPDATED_MSG), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception ex) {
+
+            log.error(MessageConstant.INTERNAL_SERVER_ERROR_MSG + ex.getMessage());
+            return new ResponseEntity<>(ApiResponseMessage.getInternalServerError(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
