@@ -51,6 +51,22 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
+
+    /*
+    {
+      "firstName": "Chaklader",
+      "lastName": "Arefe",
+      "email": "omi.chaklader@gmail.com",
+      "phoneNumber": "541-754-3010",
+      "age": 34,
+      "addressDto": {
+        "street": "Zeltingerstr. 35",
+        "state": "Berlin",
+        "country": "Berlin",
+        "zip": 12345
+      }
+    }
+    * */
     @Operation(summary = "create an employee in the recruiting platform")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Create employee using the dto", content = {

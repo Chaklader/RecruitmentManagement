@@ -1,5 +1,6 @@
 package com.recruitment.manager.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.recruitment.manager.statesandevents.EmployeeStates;
 import com.recruitment.manager.validator.ValidEmail;
@@ -28,8 +29,8 @@ public class Employee {
     private Long id;
 
     @NotNull
-//    @CreationTimestamp
-//    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creation_on" ,updatable = false)
     private Date creationOn;
 

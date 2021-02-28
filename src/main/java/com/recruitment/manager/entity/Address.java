@@ -1,5 +1,6 @@
 package com.recruitment.manager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.recruitment.manager.validator.ValidZip;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,7 @@ public class Address {
     private String zip;
 
     @OneToOne(mappedBy = "address")
+    @JsonIgnore
     private Employee employee;
 
 }

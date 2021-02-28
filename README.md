@@ -42,5 +42,22 @@ springdoc.swagger-ui.path=/pf-swagger-ui.html
 
 
 
+        {
+            "firstName":"string",
+            "lastName":"string",
+            "email":"omi.chaklader@gmail.com",
+            "phoneNumber":"800-275-2273",
+            "age":23,
+        
+            "addressDto":{
+                "street":"string",
+                "state":"string",
+                "country":"string",
+                "zip":12345
+            }
+        }
+
+
+
 
 
