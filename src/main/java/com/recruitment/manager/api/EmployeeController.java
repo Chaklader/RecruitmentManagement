@@ -37,7 +37,6 @@ public class EmployeeController {
         defined above in the state machine
     * */
 
-    // TODO 1: can't parse JSON.  Raw result:
     // TODO 2: dont get any validation messgae
     /*
       4. Add docker: Being simply executable with the least effort Ideally using
@@ -49,7 +48,6 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-
 
 
     /*

@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -23,6 +25,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -35,24 +40,24 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-    @Override
-    @NonNull
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-        @NonNull MethodArgumentNotValidException ex,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatus status,
-        @NonNull WebRequest request
-
-    ) {
-
-        String message = prepareMessageFromException(ex, (ServletWebRequest) request);
-
-        ApiErrorResponse apiError = new ApiErrorResponse(BAD_REQUEST);
-        apiError.setMessage("Validation error");
-        apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
-        apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
-        return buildResponseEntity(apiError);
-    }
+//    @Override
+//    @NonNull
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+//        @NonNull MethodArgumentNotValidException ex,
+//        @NonNull HttpHeaders headers,
+//        @NonNull HttpStatus status,
+//        @NonNull WebRequest request
+//
+//    ) {
+//
+//        String message = prepareMessageFromException(ex, (ServletWebRequest) request);
+//
+//        ApiErrorResponse apiError = new ApiErrorResponse(BAD_REQUEST);
+//        apiError.setMessage("Validation error");
+//        apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
+//        apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
+//        return buildResponseEntity(apiError);
+//    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
@@ -132,6 +137,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.NOT_FOUND,
             "Resource not found: "), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
+
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//
+//        Map<String, String> errors = new HashMap<>();
+//
+//        ex.getBindingResult().getAllErrors().forEach((error) -> {
+//
+//            String fieldName = ((FieldError) error).getField();
+//            String errorMessage = error.getDefaultMessage();
+//            errors.put(fieldName, errorMessage);
+//        });
+//
+//        return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.NOT_FOUND,
+//            errors.toString()), new HttpHeaders(), HttpStatus.NOT_FOUND);
+//    }
+
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
