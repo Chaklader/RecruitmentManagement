@@ -1,4 +1,4 @@
-package com.recruitment.manager.statesandevents;
+package com.recruitment.manager.enums;
 
 /**
  * Created by Chaklader on Feb, 2021

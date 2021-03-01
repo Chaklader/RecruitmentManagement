@@ -1,8 +1,7 @@
 package com.recruitment.manager.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.recruitment.manager.statesandevents.EmployeeStates;
+import com.recruitment.manager.enums.EmployeeStates;
 import com.recruitment.manager.validator.ValidEmail;
 import com.recruitment.manager.validator.ValidPhoneNumber;
 import lombok.*;

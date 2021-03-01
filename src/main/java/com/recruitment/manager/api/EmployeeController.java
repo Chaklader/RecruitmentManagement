@@ -1,7 +1,7 @@
 package com.recruitment.manager.api;
 
-import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Employee;
+import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.service.EmployeeService;
 import com.recruitment.manager.util.ApiResponseMessage;
 import com.recruitment.manager.util.MessageConstant;
@@ -99,6 +99,7 @@ public class EmployeeController {
             @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))}),
         @ApiResponse(responseCode = "422", description = MessageConstant.EMPLOYEE_STATE_NOT_UPDATED_MSG, content = @Content),
         @ApiResponse(responseCode = "500", description = MessageConstant.INTERNAL_SERVER_ERROR_MSG, content = @Content)})
+
     @PutMapping(value = "incheck/{id}")
     public ResponseEntity<Object> changeStateInCheck(@PathVariable(value = "id") long id) {
 

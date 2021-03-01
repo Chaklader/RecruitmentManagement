@@ -3,10 +3,11 @@ package com.recruitment.manager.service;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Address;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.statesandevents.EmployeeEvents;
-import com.recruitment.manager.statesandevents.EmployeeStates;
-import com.recruitment.manager.repo.AddressRepository;
 import com.recruitment.manager.repo.EmployeeRepository;
+import com.recruitment.manager.enums.EmployeeEvents;
+import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.repo.AddressRepository;
+import com.recruitment.manager.util.MessageConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import static com.recruitment.manager.util.MessageConstant.EMPLOYEE_ID_HEADER;
 
 
 /**
@@ -122,7 +121,7 @@ public class EmployeeService {
 
         StateMachine<EmployeeStates, EmployeeEvents> sm = stateMachinePair.getSecond();
 
-        Message<EmployeeEvents> inCheckMessage = MessageBuilder.withPayload(EmployeeEvents.CHECK).setHeader(EMPLOYEE_ID_HEADER, employeeId).setHeader("IN_CHECK_CHANGE_MESSAGE", inCheckStateChangeMessage).build();
+        Message<EmployeeEvents> inCheckMessage = MessageBuilder.withPayload(EmployeeEvents.CHECK).setHeader(MessageConstant.EMPLOYEE_ID_HEADER, employeeId).setHeader("IN_CHECK_CHANGE_MESSAGE", inCheckStateChangeMessage).build();
         sm.sendEvent(inCheckMessage);
 
         return employee;
@@ -170,7 +169,7 @@ public class EmployeeService {
                             Optional.ofNullable(messages).flatMap(
 
                                 msg -> Optional.ofNullable(
-                                    (Long) msg.getHeaders().getOrDefault(EMPLOYEE_ID_HEADER, -1L))).ifPresent(
+                                    (Long) msg.getHeaders().getOrDefault(MessageConstant.EMPLOYEE_ID_HEADER, -1L))).ifPresent(
 
                                 employeeId -> {
 

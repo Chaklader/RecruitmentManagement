@@ -1,22 +1,21 @@
 package com.recruitment.manager.exceptionhandling;
 
 
-import com.recruitment.manager.util.ApiResponseMessage;
 import com.recruitment.manager.exceptionhandling.apierror.ApiErrorResponse;
+import com.recruitment.manager.util.ApiResponseMessage;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.lang.NonNull;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -26,8 +25,9 @@ import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -153,6 +153,52 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //        return new ResponseEntity<>(ApiResponseMessage.getGenericApiResponse(Boolean.FALSE, HttpStatus.NOT_FOUND,
 //            errors.toString()), new HttpHeaders(), HttpStatus.NOT_FOUND);
 //    }
+
+
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
+//
+//        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
+
+    @Nonnull
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        List<String> errorList = ex
+                                     .getBindingResult()
+                                     .getFieldErrors()
+                                     .stream()
+                                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                     .collect(Collectors.toList());
+
+        ErrorDetails errorDetails = new ErrorDetails(BAD_REQUEST, ex.getLocalizedMessage(), errorList);
+
+        return handleExceptionInternal(ex, errorDetails, headers, errorDetails.getStatus(), request);
+    }
+
+    @Data
+    private static class ErrorDetails {
+
+        private HttpStatus status;
+        private String message;
+        private List<String> errors;
+
+        public ErrorDetails(HttpStatus status, String message, List<String> errors) {
+            super();
+            this.status = status;
+            this.message = message;
+            this.errors = errors;
+        }
+
+        public ErrorDetails(HttpStatus status, String message, String error) {
+            super();
+            this.status = status;
+            this.message = message;
+            errors = Arrays.asList(error);
+        }
+    }
+
 
 
     @ExceptionHandler(DataIntegrityViolationException.class)

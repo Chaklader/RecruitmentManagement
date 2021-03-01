@@ -2,8 +2,6 @@ package com.recruitment.manager.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 /**
  * Created by Chaklader on Feb, 2021
  */
