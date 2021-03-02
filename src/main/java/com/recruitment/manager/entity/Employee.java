@@ -1,8 +1,8 @@
 package com.recruitment.manager.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.recruitment.manager.enums.EmployeeStates;
 import com.recruitment.manager.validator.ValidEmail;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.recruitment.manager.validator.ValidPhoneNumber;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -60,7 +60,7 @@ public class Employee {
     private EmployeeStates employeeState;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 

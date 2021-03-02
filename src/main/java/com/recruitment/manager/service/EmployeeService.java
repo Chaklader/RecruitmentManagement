@@ -3,11 +3,11 @@ package com.recruitment.manager.service;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Address;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.repo.EmployeeRepository;
-import com.recruitment.manager.enums.EmployeeEvents;
 import com.recruitment.manager.enums.EmployeeStates;
-import com.recruitment.manager.repo.AddressRepository;
+import com.recruitment.manager.repo.EmployeeRepository;
 import com.recruitment.manager.util.MessageConstant;
+import com.recruitment.manager.enums.EmployeeEvents;
+import com.recruitment.manager.repo.AddressRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +68,7 @@ public class EmployeeService {
      */
     public Employee createEmployee(EmployeeDto employeeDto) {
 
+
         try {
 
             Address address = modelMapper.map(employeeDto.getAddressDto(), Address.class);
@@ -107,6 +108,7 @@ public class EmployeeService {
      */
     public Employee changeToInCheckState(Long employeeId, String inCheckStateChangeMessage) {
 
+        System.out.println("Hello");
         Pair<Employee, StateMachine<EmployeeStates, EmployeeEvents>> stateMachinePair = this.build(employeeId);
 
         Employee employee = stateMachinePair.getFirst();
@@ -141,7 +143,7 @@ public class EmployeeService {
         return employees;
     }
 
-    private Pair<Employee, StateMachine<EmployeeStates, EmployeeEvents>> build(Long employeeId) {
+    public Pair<Employee, StateMachine<EmployeeStates, EmployeeEvents>> build(Long employeeId) {
 
         Employee employee = this.employeeRepository.findById(employeeId).orElse(null);
         String employeeIdKey = Long.toString(Objects.requireNonNull(employee).getId());

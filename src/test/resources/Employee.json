@@ -1,0 +1,13 @@
+{
+    "firstName": "Chaklader",
+    "lastName": "Arefe",
+    "email": "omi.chaklader@gmail.com",
+    "phoneNumber": "541-754-3010",
+    "age": 34,
+    "addressDto": {
+        "street": "Zeltingerstr. 35",
+        "state": "Berlin",
+        "country": "Berlin",
+        "zip": 12345
+    }
+}
