@@ -4,31 +4,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recruitment.manager.dto.AddressDto;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Employee;
+import com.recruitment.manager.enums.EmployeeEvents;
 import com.recruitment.manager.enums.EmployeeStates;
 import com.recruitment.manager.repo.EmployeeRepository;
 import com.recruitment.manager.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Optional;
 
-import static org.mockito.BDDMockito.given;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -48,9 +51,12 @@ class EmployeeControllerIT {
     private ObjectMapper objectMapper;
 
     @Mock
+    StateMachine<EmployeeStates, EmployeeEvents> stateMachine;
+
+    @Mock
     private EmployeeService employeeService;
 
-    @Autowired
+    @Mock
     private EmployeeRepository employeeRepository;
 
     @Autowired
@@ -62,10 +68,18 @@ class EmployeeControllerIT {
 
         EmployeeDto employeeDto = createEmployeeDto();
 
-        mockMvc.perform(post("/api/employee/create")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(employeeDto)))
-            .andExpect(status().isCreated());
+        ResultActions resultActions = mockMvc.perform(post("/api/employee/create")
+                                                          .contentType(MediaType.APPLICATION_JSON)
+                                                          .content(objectMapper.writeValueAsString(employeeDto)))
+                                          .andExpect(status().isCreated());
+
+
+
+//        mockMvc.perform(get("/api/castle/createarmy/"+ARMY_SIZE)
+//                            .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.typeAndSizeMap.size()", is(2)))
+//            .andExpect(jsonPath("$.totalSize", is(167)));
 
     }
 
@@ -77,14 +91,21 @@ class EmployeeControllerIT {
 
         Employee em = modelMapper.map(employeeDto, Employee.class);
 
-//        Employee s = employeeRepository.save(em);
 
-//        when(employeeService.changeToInCheckState(1L, "")).thenReturn(em);
+        when(employeeRepository.findById(any())).thenReturn(Optional.of(em));
+        when(employeeService.build(any())).thenReturn(Pair.of(em, stateMachine));
+        when(employeeService.changeToInCheckState(any(), any())).thenReturn(em);
 
-        mockMvc.perform(put("/api/employee//incheck/"+ 1L)
+
+        mockMvc.perform(put("/api/employee/incheck/" + 1L)
                             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
+//        mockMvc.perform(get("/api/castle/createarmy/"+ARMY_SIZE)
+//                            .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.typeAndSizeMap.size()", is(2)))
+//            .andExpect(jsonPath("$.totalSize", is(167)));
     }
 
 
