@@ -5,6 +5,7 @@ import com.recruitment.manager.dto.AddressDto;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Employee;
 import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.repo.EmployeeRepository;
 import com.recruitment.manager.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,9 @@ class EmployeeControllerIT {
     private EmployeeService employeeService;
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
 
@@ -73,7 +77,9 @@ class EmployeeControllerIT {
 
         Employee em = modelMapper.map(employeeDto, Employee.class);
 
-        when(employeeService.changeToInCheckState(1L, "")).thenReturn(em);
+//        Employee s = employeeRepository.save(em);
+
+//        when(employeeService.changeToInCheckState(1L, "")).thenReturn(em);
 
         mockMvc.perform(put("/api/employee//incheck/"+ 1L)
                             .contentType(MediaType.APPLICATION_JSON))
