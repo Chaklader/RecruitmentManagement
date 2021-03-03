@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 /**
  * Created by Chaklader on Feb, 2021
  */
-@Repository
 public interface AddressRepository extends CrudRepository<Address, Long> {
 
 }

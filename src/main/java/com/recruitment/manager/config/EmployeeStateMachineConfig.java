@@ -1,8 +1,8 @@
 package com.recruitment.manager.config;
 
 
-import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import com.recruitment.manager.statemachine.enums.EmployeeEvents;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;

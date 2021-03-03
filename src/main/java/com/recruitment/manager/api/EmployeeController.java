@@ -33,22 +33,26 @@ public class EmployeeController {
 
 
     /*
-    {
-                "firstName":"Cheng",
-                "lastName":"Liu",
+    * This Endpoint support adding an employee with very basic employee details including (name, contract information, age, you can decide.)
+      With initial state "ADDED" which indicates that the employee isn't active yet. An example JSON for the Post request will be:
+
+           {
+                "firstName":"Bheng",
+                "lastName":"Xyz",
                 "email":"nmi.cher@gmail.com",
                 "phoneNumber":"800-275-2273",
                 "age":23,
 
                 "addressDto":{
+
                     "street":"Zeltinger.25",
                     "state":"Berlin",
                     "country":"Germany",
                     "zip":12345
                 }
             }
+    *
     * */
-
 
     @Operation(summary = "create an employee in the recruiting platform")
     @ApiResponses(value = {
@@ -78,6 +82,9 @@ public class EmployeeController {
     }
 
 
+    /*
+     * This endpoint to change the state of a given employee to "In-CHECK" or any of the states defined above in the state machine
+     * */
     @Operation(description = "employee onboarding progress: change state from ADDED to IN_CHECK")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "change employee state to the IN_CHECK using employee Id", content = {

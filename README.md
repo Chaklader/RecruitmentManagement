@@ -16,7 +16,7 @@
 
     Please, reach to the API contract in the following link:
 
-        springdoc.swagger-ui.path=/pf-swagger-ui.html
+        http://localhost:8080/pf-swagger-ui.html
 
 
 
