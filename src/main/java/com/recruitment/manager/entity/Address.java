@@ -44,7 +44,8 @@ public class Address {
     @Column(name = "zip")
     private String zip;
 
-    @OneToOne(mappedBy = "address")
+    @Transient
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
     @JsonIgnore
     private Employee employee;
 

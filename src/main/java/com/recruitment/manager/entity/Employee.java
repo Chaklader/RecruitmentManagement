@@ -60,7 +60,7 @@ public class Employee {
     private EmployeeStates employeeState;
 
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
