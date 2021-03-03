@@ -19,13 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Date;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -60,13 +58,14 @@ class EmployeeControllerIT {
         EmployeeDto employeeDto = createEmployeeDto();
 
         mockMvc.perform(post("/api/employee/create")
-                                                          .contentType(MediaType.APPLICATION_JSON)
-                                                          .content(objectMapper.writeValueAsString(employeeDto)))
-                                          .andExpect(status().isCreated())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(employeeDto)))
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.firstName", is("Chaklader")))
             .andExpect(jsonPath("$.lastName", is("Arefe")))
             .andExpect(jsonPath("$.age", is(23)))
-            .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")));
+            .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")))
+            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")));
     }
 
 
@@ -89,7 +88,8 @@ class EmployeeControllerIT {
             .andExpect(jsonPath("$.firstName", is("Chaklader")))
             .andExpect(jsonPath("$.lastName", is("Arefe")))
             .andExpect(jsonPath("$.age", is(23)))
-            .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")));
+            .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")))
+            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")));
 
     }
 
