@@ -1,8 +1,7 @@
 package com.recruitment.manager.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.recruitment.manager.enums.EmployeeStates;
+
 import lombok.Data;
 
 /**
@@ -20,9 +19,6 @@ public class EmployeeDto {
     private String phoneNumber;
 
     private Integer age;
-
-//    @JsonIgnore
-//    private EmployeeStates statee;
 
     private AddressDto addressDto;
 

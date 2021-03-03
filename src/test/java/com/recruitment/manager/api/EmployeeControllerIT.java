@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recruitment.manager.dto.AddressDto;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import com.recruitment.manager.repo.AddressRepository;
 import com.recruitment.manager.repo.EmployeeRepository;
 import org.junit.jupiter.api.Test;

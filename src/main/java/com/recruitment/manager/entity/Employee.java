@@ -1,6 +1,6 @@
 package com.recruitment.manager.entity;
 
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import com.recruitment.manager.validator.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.recruitment.manager.validator.ValidPhoneNumber;

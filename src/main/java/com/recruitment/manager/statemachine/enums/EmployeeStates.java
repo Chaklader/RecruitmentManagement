@@ -1,4 +1,4 @@
-package com.recruitment.manager.enums;
+package com.recruitment.manager.statemachine.enums;
 
 /**
  * Created by Chaklader on Feb, 2021

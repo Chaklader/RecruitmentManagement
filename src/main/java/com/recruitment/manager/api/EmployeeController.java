@@ -28,43 +28,10 @@ import javax.validation.Valid;
 public class EmployeeController {
 
 
-    /*
-        - An Endpoint to support adding an employee with very basic employee details including
-        (name, contract information, age, you can decide.) With initial state "ADDED" which incidates
-        that the employee isn't active yet.
-
-        - Another endpoint to change the state of a given employee to "In-CHECK" or any of the states
-        defined above in the state machine
-    * */
-
-    // TODO 2: dont get any validation messgae
-    /*
-      4. Add docker: Being simply executable with the least effort Ideally using
-         Docker and docker-compose or any similar approach.
-      5. Write the IT tests using the rest assured
-      6. Write the comments
-      7. Write the README file for the app
-    * */
-
     @Autowired
     private EmployeeService employeeService;
 
 
-    /*
-    {
-      "firstName": "Chaklader",
-      "lastName": "Arefe",
-      "email": "omi.chaklader@gmail.com",
-      "phoneNumber": "541-754-3010",
-      "age": 34,
-      "addressDto": {
-        "street": "Zeltingerstr. 35",
-        "state": "Berlin",
-        "country": "Berlin",
-        "zip": 12345
-      }
-    }
-    * */
     @Operation(summary = "create an employee in the recruiting platform")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Create employee using the dto", content = {

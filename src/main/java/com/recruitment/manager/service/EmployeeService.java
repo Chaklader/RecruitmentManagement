@@ -3,10 +3,10 @@ package com.recruitment.manager.service;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Address;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.enums.EmployeeStates;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import com.recruitment.manager.repo.EmployeeRepository;
 import com.recruitment.manager.util.MessageConstant;
-import com.recruitment.manager.enums.EmployeeEvents;
+import com.recruitment.manager.statemachine.enums.EmployeeEvents;
 import com.recruitment.manager.repo.AddressRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -124,20 +124,6 @@ public class EmployeeService {
         sm.sendEvent(inCheckMessage);
 
         return employee;
-    }
-
-    public Optional<Employee> findById(Long id) {
-
-        Optional<Employee> employee = employeeRepository.findById(id);
-
-        return employee;
-    }
-
-    public List<Employee> findAll() {
-
-        List<Employee> employees = (List<Employee>) employeeRepository.findAll();
-
-        return employees;
     }
 
     public Pair<Employee, StateMachine<EmployeeStates, EmployeeEvents>> build(Long employeeId) {

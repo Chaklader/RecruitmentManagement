@@ -1,8 +1,8 @@
 package com.recruitment.manager.config;
 
 
-import com.recruitment.manager.enums.EmployeeStates;
-import com.recruitment.manager.enums.EmployeeEvents;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
+import com.recruitment.manager.statemachine.enums.EmployeeEvents;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -81,7 +81,7 @@ public class EmployeeStateMachineConfig extends StateMachineConfigurerAdapter<Em
             @Override
             public void stateChanged(State<EmployeeStates, EmployeeEvents> from, State<EmployeeStates, EmployeeEvents> to) {
 
-                log.info(String.format("state changed  from:  %s  to:  %s", from, to));
+                log.info(String.format("state changed  from:  %s  to:  %s", from.getId().name(), to.getId().name()));
             }
         };
 
