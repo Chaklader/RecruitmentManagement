@@ -1,5 +1,28 @@
     
     
+    Finite State Machine Based HR Recruitment Platform
+    
+
+    Execution
+
+    Please, run the following commands sequentiaqlly,
+
+        $ mvn clean install
+        
+        $ docker build --tag=recruitment-server:latest .
+        
+        $ docker run -p8080:8080 recruitment-server:latest
+        
+
+    Please, reach to the API contract in the following link:
+
+        springdoc.swagger-ui.path=/pf-swagger-ui.html
+
+
+
+
+
+
     PeopleFlow (www.pplflw.com) is a global HR platform enabling companies to hire & onboard their employees internationally, at the push of a button. It is our mission to create opportunities for anyone to work from anywhere. As work is becoming even more global and remote, there has never been a bigger chance to build a truly global HR-tech company.
     
     
@@ -18,13 +41,15 @@
     
     
     Our backend stack is:
+
     - Java 11
     - Spring Framework
     - Kafka
     
     
     Your task is to build  Restful API doing the following:
-    - An Endpoint to support adding an employee with very basic employee details including (name, contract information, age, you can decide.) With initial state "ADDED" which incidates that the employee isn't active yet.
+    - An Endpoint to support adding an employee with very basic employee details including (name, contract information, age, you can decide.) 
+      With initial state "ADDED" which incidates that the employee isn't active yet.
     
     - Another endpoint to change the state of a given employee to "In-CHECK" or any of the states defined above in the state machine
     
@@ -38,24 +63,9 @@
     
     
     
-    springdoc.swagger-ui.path=/pf-swagger-ui.html
     
     
-    
-            {
-                "firstName":"string",
-                "lastName":"string",
-                "email":"omi.chaklader@gmail.com",
-                "phoneNumber":"800-275-2273",
-                "age":23,
             
-                "addressDto":{
-                    "street":"string",
-                    "state":"string",
-                    "country":"string",
-                    "zip":12345
-                }
-            }
     
     
     
