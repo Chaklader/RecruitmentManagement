@@ -52,8 +52,6 @@ class EmployeeControllerIT {
     private ModelMapper modelMapper;
 
 
-
-
     @Test
     public void givenEmployeeDto_CreateEmployeeWithAddedState() throws Exception {
 
@@ -72,7 +70,6 @@ class EmployeeControllerIT {
 
     }
 
-
     @Test
     public void givenEmployeeDto_Put() throws Exception {
 
@@ -86,7 +83,7 @@ class EmployeeControllerIT {
         employeeRepository.save(employee);
 
 
-        mockMvc.perform(put("/api/employee/incheck/" + 2L)
+        mockMvc.perform(put("/api/employee/incheck/" + 1L)
                             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.firstName", is("Chaklader")))
@@ -97,7 +94,6 @@ class EmployeeControllerIT {
             .andExpect(jsonPath("$.employeeState", is("IN_CHECK")));
 
     }
-
 
     private EmployeeDto createEmployeeDto() {
 

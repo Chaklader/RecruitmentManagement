@@ -24,10 +24,7 @@ import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -88,6 +85,7 @@ public class EmployeeService {
             Employee employee = this.employeeRepository.save(newEmployee);
 
             return employee;
+
         } catch (Exception ex) {
 
             log.error("Error occurred while creating a new employee. Error ::" + ex.getMessage());
