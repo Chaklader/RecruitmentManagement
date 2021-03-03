@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recruitment.manager.dto.AddressDto;
 import com.recruitment.manager.dto.EmployeeDto;
 import com.recruitment.manager.entity.Employee;
-import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import com.recruitment.manager.repo.AddressRepository;
 import com.recruitment.manager.repo.EmployeeRepository;
+import com.recruitment.manager.statemachine.enums.EmployeeStates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
@@ -52,6 +52,8 @@ class EmployeeControllerIT {
     private ModelMapper modelMapper;
 
 
+
+
     @Test
     public void givenEmployeeDto_CreateEmployeeWithAddedState() throws Exception {
 
@@ -65,7 +67,9 @@ class EmployeeControllerIT {
             .andExpect(jsonPath("$.lastName", is("Arefe")))
             .andExpect(jsonPath("$.age", is(23)))
             .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")))
-            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")));
+            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")))
+            .andExpect(jsonPath("$.employeeState", is("ADDED")));
+
     }
 
 
@@ -89,7 +93,8 @@ class EmployeeControllerIT {
             .andExpect(jsonPath("$.lastName", is("Arefe")))
             .andExpect(jsonPath("$.age", is(23)))
             .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")))
-            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")));
+            .andExpect(jsonPath("$.phoneNumber", is("541-754-3010")))
+            .andExpect(jsonPath("$.employeeState", is("IN_CHECK")));
 
     }
 
