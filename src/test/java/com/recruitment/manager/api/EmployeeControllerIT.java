@@ -71,7 +71,7 @@ class EmployeeControllerIT {
 
 
     @Test
-    public void givenEmployeeDto_CreateEmployee1WithAddedState() throws Exception {
+    public void givenEmployeeDto_Put() throws Exception {
 
         EmployeeDto employeeDto = createEmployeeDto();
 
@@ -85,7 +85,12 @@ class EmployeeControllerIT {
 
         mockMvc.perform(put("/api/employee/incheck/" + 2L)
                             .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.firstName", is("Chaklader")))
+            .andExpect(jsonPath("$.lastName", is("Arefe")))
+            .andExpect(jsonPath("$.age", is(23)))
+            .andExpect(jsonPath("$.email", is("omi.chaklader@gmail.com")));
+
     }
 
 

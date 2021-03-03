@@ -70,27 +70,24 @@ public class EmployeeService {
 
 
         try {
+            Employee newEmployee = modelMapper.map(employeeDto, Employee.class);
 
-            Address address = modelMapper.map(employeeDto.getAddressDto(), Address.class);
+            Address address = newEmployee.getAddress();
 
             if (address == null) {
 
                 log.info("we are unable to acquire the address info for the employee.");
+                return null;
             }
 
-            addressRepository.save(address);
+            this.addressRepository.save(address);
 
-            Employee newEmployee = modelMapper.map(employeeDto, Employee.class);
+            newEmployee.setEmployeeState(EmployeeStates.ADDED);
+            newEmployee.setCreationOn(new Date());
 
-            if (newEmployee != null) {
+            Employee employee = this.employeeRepository.save(newEmployee);
 
-                newEmployee.setEmployeeState(EmployeeStates.ADDED);
-                newEmployee.setCreationOn(new Date());
-
-                Employee employee = this.employeeRepository.save(newEmployee);
-
-                return employee;
-            }
+            return employee;
         } catch (Exception ex) {
 
             log.error("Error occurred while creating a new employee. Error ::" + ex.getMessage());
